@@ -1,0 +1,249 @@
+/*
+ * Resource.rc
+ *
+ * This file defines the resources used by the app.  Keyboard accelerators,
+ * dialogs, menus, version etc are here.
+ *
+ * Copyright (c) Malcolm Smith 2001-2017.  No warranty is provided.
+ */
+#include "pch.h"
+
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+//
+// We can build the manifest using old resource compilers,
+// but need to ensure the definitions are in place.
+//
+#ifndef CREATEPROCESS_MANIFEST_RESOURCE_ID
+#define CREATEPROCESS_MANIFEST_RESOURCE_ID 1
+#endif
+
+#ifndef RT_MANIFEST
+#define RT_MANIFEST 24
+#endif
+
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "serenity.manifest"
+
+
+KEYS ACCELERATORS DISCARDABLE 
+BEGIN
+    "D",            IDM_MOVEDOWN,           VIRTKEY, CONTROL, NOINVERT
+    "F",            IDM_FIND,               VIRTKEY, CONTROL, NOINVERT
+    "H",            IDM_PAUSE,              VIRTKEY, CONTROL, NOINVERT
+    "I",            IDM_IMPORTFILE,         VIRTKEY, CONTROL, NOINVERT
+    "N",            IDM_NEXT,               VIRTKEY, CONTROL, NOINVERT
+    "O",            IDM_OPEN,               VIRTKEY, CONTROL, NOINVERT
+    "P",            IDM_PREVIOUS,           VIRTKEY, CONTROL, NOINVERT
+    "R",            IDM_RESUME,             VIRTKEY, CONTROL, NOINVERT
+    "U",            IDM_MOVEUP,             VIRTKEY, CONTROL, NOINVERT
+    "L",            IDM_VOL_UP,             VIRTKEY, CONTROL, NOINVERT
+    "Q",            IDM_VOL_DOWN,           VIRTKEY, CONTROL, NOINVERT
+    VK_DELETE,      IDM_DELETE,             VIRTKEY, NOINVERT
+    VK_ESCAPE,      IDM_STOP,               VIRTKEY, NOINVERT
+    VK_F3,          IDM_FINDNEXT,           VIRTKEY, NOINVERT
+    VK_F4,          IDM_FINDPREV,           VIRTKEY, NOINVERT
+    VK_F5,          IDM_REFRESH,            VIRTKEY, NOINVERT
+    VK_RETURN,      IDM_PLAY,               VIRTKEY, NOINVERT
+#ifdef INTERNAL
+    VK_RETURN,      IDM_PROPERTIES,         VIRTKEY, ALT, NOINVERT
+#endif
+    "X",            IDM_EXIT,               VIRTKEY, CONTROL, NOINVERT
+END
+
+IDI_ICOMAIN             ICON    DISCARDABLE     "mainicon.ico"
+IDI_ICOBLACK            ICON    DISCARDABLE     "icoblack.ico"
+IDI_ICOWHITE            ICON    DISCARDABLE     "icowhite.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+1 VERSIONINFO
+ FILEVERSION MPLAY_VER_MAJOR,MPLAY_VER_MINOR,MPLAY_VER_MICRO,0
+ PRODUCTVERSION MPLAY_VER_MAJOR,MPLAY_VER_MINOR,MPLAY_VER_MICRO,0
+ FILEFLAGSMASK 0x3fL
+#ifdef DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "000904b0"
+        BEGIN
+            VALUE "Comments", MPLAY_NAME "\0"
+            VALUE "CompanyName", "Malcolm Smith\0"
+            VALUE "FileDescription", MPLAY_NAME "\0"
+            VALUE "FileVersion", MPLAY_VER_STRING "\0"
+            VALUE "InternalName", "SERENITY\0"
+            VALUE "LegalCopyright", MPLAY_COPYRIGHT "\0"
+            VALUE "OriginalFilename", "SERENITY.EXE\0"
+            VALUE "ProductName", MPLAY_NAME "\0"
+            VALUE "ProductVersion", MPLAY_VER_STRING "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x009, 0x4b0
+    END
+END
+
+#ifndef DS_FIXEDSYS
+#define DS_FIXEDSYS (0x0008L)
+#endif
+
+#ifndef DS_SHELLFONT
+#define DS_SHELLFONT (DS_SETFONT | DS_FIXEDSYS)
+#endif
+
+IDDFIND DIALOGEX DISCARDABLE  0, 0, 221, 121
+STYLE WS_OVERLAPPED | DS_SHELLFONT | WS_CAPTION | WS_THICKFRAME | WS_CLIPCHILDREN
+CAPTION "Find"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Text to search for:",-1,7,7,200,10
+    DIALOGRESIZECONTROL { 0, 0, 100, 100 }
+    COMBOBOX        IDC_FINDTEXT,15,20,199,72,CBS_DROPDOWN|CBS_AUTOHSCROLL|WS_TABSTOP|WS_VSCROLL
+    CONTROL         "Start from &top of list",IDC_STARTTOP,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,20,40,159,10
+    CONTROL         "Match &case",IDC_MATCHCASE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    20,55,159,10
+    CONTROL         "Search full &Path",IDC_SEARCHPATH,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,20,70,159,10
+    CONTROL         "Search for items without text",IDC_INVERT,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,20,85,159,10
+    DIALOGRESIZECONTROL { 0, 100, 0, 0 }
+    DEFPUSHBUTTON   "OK",1,5,100,50,14
+    DIALOGRESIZECONTROL { 0, 100, 0, 0 }
+    PUSHBUTTON      "Cancel",2,60,100,50,14
+END
+
+#ifdef INTERNAL
+IDDPROP DIALOGEX DISCARDABLE  0, 0, 208, 117
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Properties"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    DEFPUSHBUTTON   "Close",2,4,96,50,14
+    LTEXT           "File name:",-1,4,8,33,8
+    EDITTEXT        IDC_TRACKNAME,44,7,156,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Artist:",-1,4,25,33,8
+    EDITTEXT        IDC_ARTIST,44,24,156,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Source:",-1,4,41,33,8
+    EDITTEXT        IDC_SOURCE,44,40,156,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Type:",-1,4,57,33,8
+    EDITTEXT        IDC_SOURCETYPE,44,56,156,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Track:",-1,4,73,33,8
+    EDITTEXT        IDC_TRACK,44,72,156,12,ES_AUTOHSCROLL | ES_READONLY
+END
+#endif
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+MPMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New",                            IDM_NEW
+        MENUITEM "&Open...\tCtrl+O",                IDM_OPEN
+        MENUITEM "&Save",                           IDM_SAVE
+        MENUITEM "Save &As...",                     IDM_SAVEAS
+        MENUITEM SEPARATOR
+        POPUP "&Update"
+        BEGIN
+            MENUITEM "Get current version"          IDM_UPDATE_CURRENT
+            MENUITEM SEPARATOR
+            MENUITEM "Get stable version"           IDM_UPDATE_STABLE
+            MENUITEM "Get development version"      IDM_UPDATE_DAILY
+            MENUITEM SEPARATOR
+            MENUITEM "Get matching source code"     IDM_UPDATE_SOURCE
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit\tCtrl+X",                   IDM_EXIT
+        MENUITEM SEPARATOR
+        MENUITEM "A&bout Serenity Audio Player...", IDM_ABOUT
+#ifdef DEBUG
+        MENUITEM SEPARATOR
+        MENUITEM "Break into &Debugger",            IDM_DEBUG
+#endif
+    END
+    POPUP "&Media"
+    BEGIN
+        MENUITEM "&Play\tEnter",                    IDM_PLAY
+        MENUITEM "&Stop\tEsc",                      IDM_STOP
+        MENUITEM "P&ause\tCtrl+H",                  IDM_PAUSE
+        MENUITEM "&Resume\tCtrl+R",                 IDM_RESUME, GRAYED
+        MENUITEM SEPARATOR
+        POPUP "Nav&igate"
+        BEGIN
+            MENUITEM "&Next\tCtrl+N",               IDM_NEXT
+            MENUITEM "P&revious\tCtrl+P",           IDM_PREVIOUS
+            MENUITEM "&First",                      IDM_FIRST
+            MENUITEM "&Last",                       IDM_LAST
+        END
+        POPUP "R&epeat"
+        BEGIN
+            MENUITEM "Next Track",                  IDM_REP_NEXTTRACK, CHECKED
+            MENUITEM "This Track",                  IDM_REP_THISTRACK
+            MENUITEM "No Track",                    IDM_REP_NOTRACK
+        END
+        MENUITEM SEPARATOR
+        POPUP "&Volume"
+        BEGIN
+            MENUITEM "&Louder\tCtrl+L",             IDM_VOL_UP
+            MENUITEM "&Quieter\tCtrl+Q",            IDM_VOL_DOWN
+        END
+    END
+    POPUP "&Items"
+    BEGIN
+        POPUP "&Sort"
+        BEGIN
+            MENUITEM "Sort by &Display",            IDM_SORTDISPLAY
+            MENUITEM "Sort by &Filename",           IDM_SORTFILE
+            MENUITEM "Sort by &Path",               IDM_SORTPATH
+            MENUITEM "S&huffle",                    IDM_SHUFFLE
+        END
+        POPUP "&Manipulate"
+        BEGIN
+            MENUITEM "Move &Up\tCtrl+U",            IDM_MOVEUP
+            MENUITEM "Move &Down\tCtrl+D",          IDM_MOVEDOWN
+            MENUITEM SEPARATOR
+            MENUITEM "D&elete\tDel",                IDM_DELETE
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&Find...\tCtrl+F",                IDM_FIND
+        MENUITEM "Find &Next\tF3",                  IDM_FINDNEXT
+        MENUITEM "Find &Previous\tF4",              IDM_FINDPREV
+        MENUITEM "S&trip...",                       IDM_STRIP
+        MENUITEM SEPARATOR
+        POPUP "&Options"
+        BEGIN
+            MENUITEM "Display Paths",               IDM_DISPPATH
+            MENUITEM "&Always on top",              IDM_ONTOP
+            MENUITEM "Display Tracker",             IDM_DISPTRACK, CHECKED
+            MENUITEM SEPARATOR
+            MENUITEM "Sa&ve options",               IDM_SAVEOPTIONS
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&Refresh\tF5",                    IDM_REFRESH
+        MENUITEM "&Import File...\tCtrl+I",         IDM_IMPORTFILE
+#ifdef INTERNAL
+        MENUITEM SEPARATOR
+        MENUITEM "&Properties\tAlt+Enter",          IDM_PROPERTIES
+#endif
+    END
+END
+
+
