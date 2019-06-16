@@ -1,0 +1,5 @@
+*.cab
+*.exe
+*.exp
+*.obj
+*.pdb

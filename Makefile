@@ -159,11 +159,18 @@ LDFLAGS=$(LDFLAGS) -OPT:NOWIN98
 # not fatal, the linker will figure it out in the end.
 #
 
+ARCH=win32
 !IF [$(CC) 2>&1 | find "for x86" >NUL]==0
 LDFLAGS=$(LDFLAGS) -MACHINE:X86
 !ELSE
 !IF [$(CC) 2>&1 | find "for x64" >NUL]==0
 LDFLAGS=$(LDFLAGS) -MACHINE:X64
+ARCH=amd64
+!ELSE
+!IF [$(CC) 2>&1 | find "for AMD64" >NUL]==0
+LDFLAGS=$(LDFLAGS) -MACHINE:AMD64
+ARCH=amd64
+!ENDIF
 !ENDIF
 !ENDIF
 
@@ -219,6 +226,7 @@ minicrt.lib:
 	@if exist crt ( cd crt & $(MAKE) & cd .. & copy crt\minicrt.lib . & copy crt\minicrt.h . )
 
 clean:
+	if exist *.cab erase *.cab
 	if exist *.exe erase *.exe
 	if exist *.obj erase *.obj
 	if exist *.pdb erase *.pdb
@@ -267,4 +275,7 @@ MNUNICODE=/DUNICODE
 
 distribution: all
 	@makensis /V1 $(PACKARCH) $(SHIPPDB) $(MNUNICODE) install.nsi
+	@yori -c ypm -c serenity-$(ARCH).cab serenity $(MPLAY_VER_MAJOR).$(MPLAY_VER_MINOR).$(MPLAY_VER_MICRO) $(ARCH) -filelist pkg\serenity.lst -minimumosbuild 1381 -upgradepath http://www.malsmith.net/download/?obj=serenity/latest-stable/serenity-$(ARCH).cab -symbolpath http://www.malsmith.net/download/?obj=serenity/latest-stable/serenity-pdb-$(ARCH).cab -sourcepath http://www.malsmith.net/download/?obj=serenity/latest-stable/serenity-source.cab
+	@yori -c ypm -c serenity-pdb-$(ARCH).cab serenity-pdb $(MPLAY_VER_MAJOR).$(MPLAY_VER_MINOR).$(MPLAY_VER_MICRO) $(ARCH) -filelist pkg\serenity-pdb.lst -upgradepath http://www.malsmith.net/download/?obj=serenity/latest-stable/serenity-pdb-$(ARCH).cab -sourcepath http://www.malsmith.net/download/?obj=serenity/latest-stable/serenity-source.cab
+	@yori -c ypm -cs serenity-source.cab serenity-source $(MPLAY_VER_MAJOR).$(MPLAY_VER_MINOR).$(MPLAY_VER_MICRO) -filepath .
 

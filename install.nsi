@@ -44,7 +44,7 @@ UninstPage uninstConfirm
 UninstPage instfiles
 
 LicenseText "This software is licensed under the GPL, which attaches some conditions to modification and distribution (but not to use.)  Please read the full text for these conditions."
-LicenseData "COPYING"
+LicenseData "LICENSE"
 
 ;--------------------------------
 
