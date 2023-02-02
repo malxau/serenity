@@ -3,7 +3,7 @@
  *
  * This file provides all the really platform-dependant interface stuff.
  *
- * Copyright (c) Malcolm Smith 2001-2017.  No warranty is provided.
+ * Copyright (c) Malcolm Smith 2001-2023.  No warranty is provided.
  */
 
 #include "pch.h"
@@ -70,6 +70,20 @@ MplayListUiCreate( HWND hWndParent, HINSTANCE hInstance )
         NULL
     );
     return hWnd;
+}
+
+static int
+MplayListUiRefreshBegin( HWND hWnd )
+{
+    SendMessage( hWnd, WM_SETREDRAW, FALSE, 0 );
+    return MPLAY_ERROR_SUCCESS;
+}
+
+static int
+MplayListUiRefreshEnd( HWND hWnd )
+{
+    SendMessage( hWnd, WM_SETREDRAW, TRUE, 0 );
+    return MPLAY_ERROR_SUCCESS;
 }
 
 static int
@@ -251,6 +265,20 @@ MplayListUiCreate( HWND hWndParent, HINSTANCE hInstance )
 }
 
 static int
+MplayListUiRefreshBegin( HWND hWnd )
+{
+    UNREFERENCED_PARAMETER( hWnd );
+    return MPLAY_ERROR_SUCCESS;
+}
+
+static int
+MplayListUiRefreshEnd( HWND hWnd )
+{
+    UNREFERENCED_PARAMETER( hWnd );
+    return MPLAY_ERROR_SUCCESS;
+}
+
+static int
 MplayListUiRefreshClient( HWND hWnd )
 {
     LV_COLUMN col;
@@ -379,6 +407,8 @@ MplayListUiRefreshAppend(HWND hWnd,LIST * List,BOOL bFullPath,DWORD dwStartItem)
     LPTSTR b = NULL; // Compiler warning suppression
     DWORD ListMax;
     int err;
+
+    MplayListUiRefreshBegin( hWnd );
     ListMax = GetListLength(List);
     for (i = dwStartItem; i < ListMax; i++) {
         a = GetListItemU(List, i);
@@ -396,10 +426,12 @@ MplayListUiRefreshAppend(HWND hWnd,LIST * List,BOOL bFullPath,DWORD dwStartItem)
             // some things and not others, and our list mapping logic
             // will break.
             //
+            MplayListUiRefreshEnd( hWnd );
             return err;
         }
         if (!bFullPath) if (b) b[0] = '.';
     }
+    MplayListUiRefreshEnd( hWnd );
     MplayListUiRefreshClient( hWnd );
     return MPLAY_ERROR_SUCCESS;
 }

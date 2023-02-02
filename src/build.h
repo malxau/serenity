@@ -14,7 +14,7 @@
 #define MPLAY_NAME "Serenity Audio Player"
 #endif
 
-#define MPLAY_COPYRIGHT "Copyright (c) Malcolm Smith 2001-2017"
+#define MPLAY_COPYRIGHT "Copyright (c) Malcolm Smith 2001-2023"
 
 #if MPLAY_BUILD_ID!=0
 #define PRERELEASE
